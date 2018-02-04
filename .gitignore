@@ -89,6 +89,7 @@ env/
 venv/
 bayesEnv/
 bayesNet/
+nnenv/
 ENV/
 env.bak/
 venv.bak/
