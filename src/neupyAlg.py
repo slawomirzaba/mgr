@@ -1,26 +1,25 @@
-import numpy as np
-import pandas as pd
-from neupy.algorithms import GradientDescent
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-from keras.utils import np_utils
+import numpy
+from DataProvider import DataProvider
+from NetworkWrapper import NetworkWrapper
+import constants
 
-df = pd.read_csv('https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data', header=None)
-x = df.iloc[0:150, [0,1,2,3]].values
-y = df.iloc[0:150, 4].values
-le = preprocessing.LabelEncoder()
-y = le.fit_transform(y)
+csv_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+column_of_features = [0,1,2,3]
+column_of_class = 4
+data_provider = DataProvider(csv_url, column_of_features, column_of_class)
+x_train, y_train, x_test, y_test = data_provider.get_whole_data()
 
-encoder = preprocessing.LabelEncoder()
-encoder.fit(y)
-encoded_Y = encoder.transform(y)
-# convert integers to dummy variables (i.e. one hot encoded)
-dummy_y = np_utils.to_categorical(encoded_Y)
+# ---------------------------------------------------------------------------------------------------
 
-X_train, X_test, y_train, y_test = train_test_split(x, dummy_y, test_size=0.2, random_state=42)
+network_architecture = (x_train.shape[1], 3, y_train.shape[1])
+GradientDescentNetwork = NetworkWrapper('GradientDescent', network_architecture, step=0.1)
+GradientDescentNetwork.train(x_train, y_train, 100000)
+results = GradientDescentNetwork.predict(x_test)
 
-bpnet = GradientDescent((4, 3, 3), verbose=False, step=0.1)
-bpnet.train(X_train, y_train, epochs=100)
-result = bpnet.predict(X_test)
-print('results', result)
-print('\ncorrect', y_test)
+print('results', numpy.argmax(results, axis=1))
+print('correct', numpy.argmax(y_test, axis=1))
+
+errors = numpy.argmax(y_test, axis=1)-numpy.argmax(results, axis=1)
+errors_number = numpy.count_nonzero(errors)
+
+print (errors_number)
