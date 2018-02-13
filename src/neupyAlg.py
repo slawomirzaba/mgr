@@ -13,7 +13,7 @@ x_train, y_train, x_test, y_test = data_provider.get_whole_data()
 
 network_architecture = (x_train.shape[1], 3, y_train.shape[1])
 GradientDescentNetwork = NetworkWrapper('GradientDescent', network_architecture, step=0.1)
-GradientDescentNetwork.train(x_train, y_train, 100000)
+GradientDescentNetwork.train(x_train, y_train, 10000)
 results = GradientDescentNetwork.predict(x_test)
 
 print('results', numpy.argmax(results, axis=1))
