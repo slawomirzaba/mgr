@@ -1,4 +1,4 @@
-from neupy import algorithms
+from neupy import algorithms, plots
 import copy
 import constants
 import importlib
@@ -25,6 +25,9 @@ class NetworkWrapper:
             raise Exception('first network must be initialised!')
 
         return self.network.predict(x_test)
+
+    def plot_errors(self):
+        plots.error_plot(self.network)
 
     def __get_initialise_correct_parameters(self, required_parameters, passed_parameters):
         correct_parameters = copy.deepcopy(passed_parameters)

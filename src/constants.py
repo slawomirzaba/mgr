@@ -7,5 +7,21 @@ ALGORITHMS = {
     },
     'QuasiNewton': {
         'required_parameters': []
+    },
+    'LevenbergMarquardt': {
+        'required_parameters': []
+    }
+}
+
+DATABASE_INFORMATIONS = {
+    'iris': {
+        'url': 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data',
+        'features_column': list(range(4)),
+        'class_column': 4
+    },
+    'breast_cancer': {
+        'url': 'https://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/breast-cancer-wisconsin.data',
+        'features_column': list(range(1,10)),
+        'class_column': 10
     }
 }
