@@ -5,6 +5,9 @@ ALGORITHMS = {
     'GradientDescent': {
         'required_parameters': ['step']
     },
+    'ConjugateGradient': {
+        'required_parameters': ['step']
+    },
     'QuasiNewton': {
         'required_parameters': []
     },

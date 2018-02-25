@@ -1,7 +1,7 @@
 import numpy
+import constants
 from DataProvider import DataProvider
 from NetworkWrapper import NetworkWrapper
-import constants
 
 data_inf = constants.DATABASE_INFORMATIONS['breast_cancer']
 csv_url = data_inf['url']
@@ -13,8 +13,8 @@ x_train, y_train, x_test, y_test = data_provider.get_whole_data()
 # ---------------------------------------------------------------------------------------------------
 
 network_architecture = (x_train.shape[1], 3, y_train.shape[1])
-neuralNetwork = NetworkWrapper('LevenbergMarquardt', network_architecture, step=0.1)
-neuralNetwork.train(x_train, y_train, 12)
+neuralNetwork = NetworkWrapper('QuasiNewton', network_architecture, step=0.1)
+neuralNetwork.train(x_train, y_train, 300)
 results = neuralNetwork.predict(x_test)
 
 print('results', numpy.argmax(results, axis=1))
@@ -25,4 +25,5 @@ errors_number = numpy.count_nonzero(errors)
 
 print (errors_number)
 
-neuralNetwork.plot_errors();
+neuralNetwork.plot_errors()
+neuralNetwork.plot_structure()

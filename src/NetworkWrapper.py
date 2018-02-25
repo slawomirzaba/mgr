@@ -15,19 +15,24 @@ class NetworkWrapper:
         self.network = algorithm(networks_architecture, verbose=False, **correct_parameters)
 
     def train(self, x_train, y_train, epochs=100):
-        if not self.network:
-            raise Exception('first network must be initialised!')
+        self.__network_checker()
 
         self.network.train(x_train, y_train, epochs=epochs)
 
     def predict(self, x_test):
-        if not self.network:
-            raise Exception('first network must be initialised!')
+        self.__network_checker()
 
         return self.network.predict(x_test)
 
     def plot_errors(self):
+        self.__network_checker()
+
         plots.error_plot(self.network)
+
+    def plot_structure(self):
+        self.__network_checker()
+
+        plots.layer_structure(self.network)
 
     def __get_initialise_correct_parameters(self, required_parameters, passed_parameters):
         correct_parameters = copy.deepcopy(passed_parameters)
@@ -36,3 +41,7 @@ class NetworkWrapper:
                 del correct_parameters[parameter_name]
 
         return correct_parameters
+
+    def __network_checker(self):
+        if not self.network:
+            raise Exception('first network must be initialised!')

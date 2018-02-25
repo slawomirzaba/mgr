@@ -4,14 +4,14 @@ from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 
 class DataProvider:
-    def __init__(self, csv_url, column_of_features, column_of_class):
+    def __init__(self, csv_url, features_column, class_column):
         encoder = preprocessing.LabelEncoder()
         self.data_frame = pandas.read_csv(csv_url, header=None)
         self.__remove_lack_values()
-        self.__parse_all_values_to_number()
+        self.__parse_feature_values_to_number(features_column)
         instances_number = self.data_frame.shape[0]
-        x = self.data_frame.iloc[0:instances_number, column_of_features].values
-        y = self.data_frame.iloc[0:instances_number, column_of_class].values
+        x = self.data_frame.iloc[0:instances_number, features_column].values
+        y = self.data_frame.iloc[0:instances_number, class_column].values
         encoded_y = encoder.fit_transform(y)
         hot_encoded_y = np_utils.to_categorical(encoded_y)
         normalized_x = np_utils.normalize(x)
@@ -22,8 +22,8 @@ class DataProvider:
         mask = (data_frame_to_create_mask.apply(lambda x: x.str.strip()) == '?').any(axis=1)
         self.data_frame = self.data_frame[~mask]
 
-    def __parse_all_values_to_number(self):
-        self.data_frame = self.data_frame.apply(pandas.to_numeric)
+    def __parse_feature_values_to_number(self, features_column):
+        self.data_frame[features_column] = self.data_frame[features_column].apply(pandas.to_numeric)
     
     def get_training_data(self):
         return self.x_train, self.y_train
