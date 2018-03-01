@@ -4,7 +4,7 @@ from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 
 class DataProvider:
-    def __init__(self, csv_url, features_column, class_column):
+    def __init__(self, csv_url, features_column, class_column, test_size=0.2):
         encoder = preprocessing.LabelEncoder()
         self.data_frame = pandas.read_csv(csv_url, header=None)
         self.__remove_lack_values()
@@ -15,7 +15,7 @@ class DataProvider:
         encoded_y = encoder.fit_transform(y)
         hot_encoded_y = np_utils.to_categorical(encoded_y)
         normalized_x = np_utils.normalize(x)
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(normalized_x, hot_encoded_y, test_size=0.2, random_state=42)
+        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(normalized_x, hot_encoded_y, test_size=test_size, random_state=42)
 
     def __remove_lack_values(self):
         data_frame_to_create_mask = self.data_frame.select_dtypes(['object'])

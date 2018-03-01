@@ -2,6 +2,7 @@ from neupy import algorithms, plots
 import copy
 import constants
 import importlib
+import numpy
 
 class NetworkWrapper:
     def __init__(self, algorithm_name, networks_architecture, **kwargs):
@@ -23,6 +24,14 @@ class NetworkWrapper:
         self.__network_checker()
 
         return self.network.predict(x_test)
+    
+    def get_number_of_errors(self, predictions, y_test):
+        errors_array = numpy.argmax(y_test, axis=1) - numpy.argmax(predictions, axis=1)
+        return numpy.count_nonzero(errors_array)
+    
+    def get_number_of_corrects(self, predictions, y_test):
+        errors_number = self.get_number_of_errors(predictions, y_test)
+        return len(y_test) - errors_number
 
     def plot_errors(self):
         self.__network_checker()
@@ -36,7 +45,7 @@ class NetworkWrapper:
 
     def __get_initialise_correct_parameters(self, required_parameters, passed_parameters):
         correct_parameters = copy.deepcopy(passed_parameters)
-        for parameter_name, value in passed_parameters.items():
+        for parameter_name, _ in passed_parameters.items():
             if parameter_name not in required_parameters:
                 del correct_parameters[parameter_name]
 
