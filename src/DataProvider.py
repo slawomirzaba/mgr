@@ -1,10 +1,10 @@
-import pandas as pandas
+import pandas
 from sklearn import preprocessing
 from keras.utils import np_utils
 from sklearn.model_selection import train_test_split
 
 class DataProvider:
-    def __init__(self, csv_url, features_column, class_column, test_size=0.2):
+    def __init__(self, csv_url, features_column, class_column, test_size=0.4):
         encoder = preprocessing.LabelEncoder()
         self.data_frame = pandas.read_csv(csv_url, header=None)
         self.__remove_lack_values()
