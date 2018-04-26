@@ -28,6 +28,24 @@ class NetworkWrapper:
     def get_number_of_errors(self, predictions, y_test):
         errors_array = numpy.argmax(y_test, axis=1) - numpy.argmax(predictions, axis=1)
         return numpy.count_nonzero(errors_array)
+
+    def get_confusion_matrix(self,predictions, y_test):
+        TP, FP = 0, 0
+        FN, TN = 0, 0
+        y_test_classes = numpy.argmax(y_test, axis=1)
+        prediction_classes = numpy.argmax(predictions, axis=1)
+
+        for index, result in enumerate(prediction_classes):
+            if result == 1 and y_test_classes[index] == 1:
+                TP += 1
+            elif result == 1 and y_test_classes[index] == 0:
+                FP += 1
+            elif result == 0 and y_test_classes[index] == 1:
+                FN += 1
+            else:
+                TN += 1
+        
+        return numpy.array([[TP, FP],[FN, TN]])
     
     def get_number_of_corrects(self, predictions, y_test):
         errors_number = self.get_number_of_errors(predictions, y_test)

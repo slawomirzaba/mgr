@@ -3,6 +3,7 @@ import constants
 from DataProvider import DataProvider
 from NetworkWrapper import NetworkWrapper
 from ParametersExecutorProvider import ParametersExecutorProvider
+from neupy import algorithms
 
 # program parameters
 program_parameters = ParametersExecutorProvider().get_parameters()
@@ -37,15 +38,35 @@ network_architecture = tuple(
     sum([input_layer, hidden_layers, output_layer], []))
 
 neuralNetwork = NetworkWrapper(
-    algorithm_name, network_architecture, step=learning_rate)
+    algorithm_name, 
+    network_architecture, 
+    step=learning_rate, 
+    shuffle_data=False,
+    mu_update_factor=2,
+    mu=0.1)
 neuralNetwork.train(x_train, y_train, epochs_number)
 results = neuralNetwork.predict(x_test)
 
+# -------------------------------------------------------------------------------------------
 # results
+
 errors_number = neuralNetwork.get_number_of_errors(results, y_test)
 corrects_number = neuralNetwork.get_number_of_corrects(results, y_test)
+percent_correct = round(corrects_number * 100 / (corrects_number + errors_number), 2)
+confusion_matrix = neuralNetwork.get_confusion_matrix(results, y_test)
+TP, FP = confusion_matrix[0][0], confusion_matrix[0][1]
+FN, TN = confusion_matrix[1][0], confusion_matrix[1][1]
+sensitivity = round(TP / (TP + FN), 2)
+specifity = round(TN / (TN + FP), 2)
+precision = round(TP / (TP + FP), 2)
+
 print("correctly classified:", corrects_number)
 print("wrongly classified:", errors_number)
+print("percent correct:", percent_correct)
+print("confusion matrix:\n", confusion_matrix)
+print("sensitivity:", sensitivity)
+print("specifity:", specifity)
+print("precision:", precision)
 
-neuralNetwork.plot_structure()
+# neuralNetwork.plot_structure()
 neuralNetwork.plot_errors()
