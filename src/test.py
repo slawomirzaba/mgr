@@ -8,7 +8,7 @@ import time
 
 class TestExecutor:
     def __init__(self):
-        self.header = 'Lp.;iteracja;Nazwa algorytmu;Liczba epok;Wspolczynnik uczenia;Liczba warstw ukrytych;Czas uczenia [ms];Poprawnie sklasyfikowane; Niepoprawnie sklasyfikowane; Poprawnie sklasyfikowane [%]'
+        self.header = 'Lp.,iteracja,Nazwa algorytmu,Liczba epok,Wspolczynnik uczenia,Liczba warstw ukrytych,Czas uczenia [ms],Poprawnie sklasyfikowane,Niepoprawnie sklasyfikowane,Poprawnie sklasyfikowane [%]'
         self.path_to_file = constants.EXPERIMENTS_DIR + 'testy.csv'
         self.lp = 0
         # database informations
@@ -32,9 +32,9 @@ class TestExecutor:
         network_architecture = tuple(
             sum([input_layer, hidden_layers, output_layer], []))
 
+        time_start = time.process_time()
         neuralNetwork = NetworkWrapper(
             algorithm_name, network_architecture, step=learning_rate, shuffle_data=False)
-        time_start = time.process_time()
         neuralNetwork.train(x_train, y_train, epochs_number)
         elapsed_time = round((time.process_time() - time_start) * 1000, 2)
         results = neuralNetwork.predict(x_test)
@@ -44,7 +44,7 @@ class TestExecutor:
         percent_correct = round(
             corrects_number * 100 / (corrects_number + errors_number), 2)
         self.lp += 1
-        new_result = '\n{0};{1};{2};{3};{4};{5};{6};{7};{8};{9}'.format(
+        new_result = '\n{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}'.format(
             self.lp, self.iteration, algorithm_name, epochs_number, learning_rate, hidden_layers_number, elapsed_time, corrects_number, errors_number, percent_correct)
 
         self.__save_result_to_file(new_result)

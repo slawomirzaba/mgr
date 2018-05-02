@@ -1,5 +1,6 @@
 import numpy
 import constants
+import time
 from DataProvider import DataProvider
 from NetworkWrapper import NetworkWrapper
 from ParametersExecutorProvider import ParametersExecutorProvider
@@ -37,6 +38,7 @@ output_layer = [y_train.shape[1]]
 network_architecture = tuple(
     sum([input_layer, hidden_layers, output_layer], []))
 
+time_start = time.process_time()
 neuralNetwork = NetworkWrapper(
     algorithm_name, 
     network_architecture, 
@@ -45,6 +47,7 @@ neuralNetwork = NetworkWrapper(
     mu_update_factor=2,
     mu=0.1)
 neuralNetwork.train(x_train, y_train, epochs_number)
+elapsed_time = round((time.process_time() - time_start) * 1000, 2)
 results = neuralNetwork.predict(x_test)
 
 # -------------------------------------------------------------------------------------------
@@ -67,6 +70,7 @@ print("confusion matrix:\n", confusion_matrix)
 print("sensitivity:", sensitivity)
 print("specifity:", specifity)
 print("precision:", precision)
+print("learning time:", elapsed_time)
 
 # neuralNetwork.plot_structure()
 neuralNetwork.plot_errors()
